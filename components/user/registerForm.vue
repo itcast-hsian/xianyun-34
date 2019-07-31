@@ -99,7 +99,7 @@ export default {
         }
     },
     methods: {
-        // 发送验证码
+        // 手机发送验证码
         handleSendCaptcha(){
 
             // 判断手机号码是否为空
@@ -128,8 +128,24 @@ export default {
         handleRegSubmit(){
            this.$refs.form.validate( valid => {
                if(valid){
-                   // 调用注册的接口
+                   // ES6的标准语法，解构出特定的属性后，剩余的属性可以用... +变量名访问
+                   const { checkPassword, ...props } = this.form;
 
+                   // 调用注册的接口
+                    this.$axios({
+                        url: "/accounts/register",
+                        method: "POST",
+                        data: props
+                    }).then(res => {
+                        // console.log(res.data)
+
+                        // mutations下的方法都必须使用commit来调用
+                        // 第一个参数是调用的方法名，第二个参数就是数据
+                        this.$store.commit("user/setUserInfo", res.data);
+
+                        // 跳转到首页
+                        this.$router.push("/")
+                    })  
                }
            } )
         }
