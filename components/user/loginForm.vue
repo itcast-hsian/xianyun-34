@@ -69,8 +69,12 @@ export default {
                         method: "POST",
                         data: this.form
                     }).then(res => {
-                        // 
-                        console.log(res.data)
+                        // 保存到store, 要使用mutations的方法
+                        // this.$store.state.user.userInfo = res.data;
+                        
+                        // mutations下的方法都必须使用commit来调用
+                        // 第一个参数是调用的方法名，第二个参数就是数据
+                        this.$store.commit("user/setUserInfo", res.data);
                     })
                 }
             } )
