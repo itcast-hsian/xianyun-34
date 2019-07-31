@@ -4,14 +4,17 @@
         ref="form" 
         :rules="rules" 
         class="form">
-            <el-form-item class="form-item"> 
+
+            <el-form-item class="form-item" prop="username"> 
                 <el-input 
+                v-model="form.username"
                 placeholder="用户名手机">
                 </el-input>
             </el-form-item>
 
-            <el-form-item class="form-item">
+            <el-form-item class="form-item" prop="captcha">
                 <el-input 
+                v-model="form.captcha"
                 placeholder="验证码" >
                     <template slot="append">
                         <el-button @click="handleSendCaptcha">
@@ -21,21 +24,24 @@
                 </el-input>
             </el-form-item>
 
-            <el-form-item class="form-item">
+            <el-form-item class="form-item" prop="nickname">
                 <el-input 
+                v-model="form.nickname"
                 placeholder="你的名字">
                 </el-input>
             </el-form-item>
 
-            <el-form-item class="form-item">
+            <el-form-item class="form-item" prop="password">
                 <el-input 
+                v-model="form.password"
                 placeholder="密码" 
                 type="password"
                 ></el-input>
             </el-form-item>
 
-            <el-form-item class="form-item">
+            <el-form-item class="form-item" prop="checkPassword">
                 <el-input 
+                v-model="form.checkPassword"
                 placeholder="确认密码" 
                 type="password">
                 </el-input>
@@ -53,11 +59,43 @@
 <script>
 export default {
     data(){
+
+        // 验证再次输入密码
+        // rule当前的规则
+        // value 输入框的值
+        // callback回调函数，必须要调用的，不调用就不会验证
+        const validatePass = (rule, value, callback) => {
+            if (value === '') {
+                callback(new Error('请再次输入密码'));
+            } else if (value !== this.form.password) {
+                callback(new Error('两次输入密码不一致!'));
+            } else {
+                callback();
+            }
+        };
+
         return {
             // 表单数据
-            form: {},
+            form: {
+                username: "",
+                captcha: "", // 验证码
+                nickname: "", // 昵称
+                password: "",
+                checkPassword: "" // 确认密码
+            },
             // 表单规则
-            rules: {},
+            rules: {
+                username: [ { required: true, message: "用户名不能为空", trigger: "blur" } ],
+                captcha: [ { required: true, message: "手机验证码不能为空", trigger: "blur" } ],
+                nickname: [ { required: true, message: "昵称不能为空", trigger: "blur" } ],
+                password: [ { required: true, message: "密码不能为空", trigger: "blur" } ],
+
+                // 自定义校验规则
+                // https://element.eleme.cn/#/zh-CN/component/form#zi-ding-yi-xiao-yan-gui-ze
+                checkPassword: [
+                    { validator: validatePass, trigger: 'blur' }
+                 ],
+            },
         }
     },
     methods: {
@@ -69,7 +107,12 @@ export default {
 
         // 注册
         handleRegSubmit(){
-           console.log(this.form)
+           this.$refs.form.validate( valid => {
+               if(valid){
+                   // 调用注册的接口
+
+               }
+           } )
         }
     }
 }
