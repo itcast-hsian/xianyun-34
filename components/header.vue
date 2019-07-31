@@ -28,7 +28,7 @@
 
                         <span class="el-dropdown-link">
                             <img src="http://157.122.54.189:9095/assets/images/avatar.jpg" alt="">
-                            银河抽水机
+                            {{$store.state.user.userInfo.user.nickname}}
                             <i class="el-icon-arrow-down el-icon--right"></i>
                         </span>
 
@@ -47,7 +47,9 @@
 
 <script>
 export default {
-
+    mounted(){
+        console.log( this.$store.state.user.userInfo.user.nickname)
+    }
 }
 </script>
 
