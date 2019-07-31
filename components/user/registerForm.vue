@@ -102,6 +102,25 @@ export default {
         // 发送验证码
         handleSendCaptcha(){
 
+            // 判断手机号码是否为空
+            if(!this.form.username){
+                this.$message.warning("手机号码不能为空");
+                return;
+            }
+
+            this.$axios({
+                url: "/captchas",
+                method: "POST",
+                data: {
+                    tel: this.form.username
+                }
+            }).then(res => {
+                const { code } = res.data;
+
+                this.$alert( `模拟手机验证码为：${code}`, "提示", {
+                    type: "warning"
+                } )
+            })
         },
 
 
