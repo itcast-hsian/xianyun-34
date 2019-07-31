@@ -169,7 +169,7 @@ export default {
                 transform: scale(1.1,1.3) perspective(.7em) rotateX(2.2deg);
                 transform-origin: bottom left;
                 background: rgba(0,0,0,.5);
-                border-radius:1px 2px 0 4px;
+                border-radius:1px 2px 0 0px;
                 box-sizing:border-box;
                 }
             }

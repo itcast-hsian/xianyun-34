@@ -75,6 +75,10 @@ export default {
                         // mutations下的方法都必须使用commit来调用
                         // 第一个参数是调用的方法名，第二个参数就是数据
                         this.$store.commit("user/setUserInfo", res.data);
+
+                        // 跳转到首页
+                        this.$router.push("/")
+
                     })
                 }
             } )
