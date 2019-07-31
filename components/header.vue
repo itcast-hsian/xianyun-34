@@ -17,7 +17,7 @@
                 </el-row>
 
                 <!-- 登录注册 -->
-                <div v-if="false">
+                <div v-if="!$store.state.user.userInfo.token">
                     <!-- <router-link to="/"></router-link>     -->
                     <nuxt-link to="/user/login">登录注册</nuxt-link>    
                 </div>
