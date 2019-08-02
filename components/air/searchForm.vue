@@ -126,6 +126,10 @@ export default {
                     newData.push(v);
                 })
 
+                //  设置第一个为选中的默认值
+                this.form.departCity = newData[0].value;
+                this.form.departCode = newData[0].sort;
+
                 cb(newData);
             })
         },
@@ -154,6 +158,10 @@ export default {
                     v.value = v.name.replace("市", "");
                     newData.push(v);
                 })
+
+                //  设置第一个为选中的默认值
+                this.form.destCity = newData[0].value;
+                this.form.destCode = newData[0].sort;
 
                 cb(newData);
             })
@@ -187,7 +195,26 @@ export default {
         handleSubmit(){
 
             // 表单验证
-            
+            if(!this.form.departCity){
+                this.$alert("出发城市不能为空", "提示", {
+                    type: "warning"
+                })
+                return;
+            }
+
+            if(!this.form.destCity){
+                this.$alert("到达城市不能为空", "提示", {
+                    type: "warning"
+                })
+                return;
+            }
+
+            if(!this.form.departDate){
+                this.$alert("出发时间不能为空", "提示", {
+                    type: "warning"
+                })
+                return;
+            }
 
             // 跳转到机票列表页
             this.$router.push({
