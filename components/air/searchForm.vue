@@ -97,7 +97,6 @@ export default {
         // cb：回调函数，必须要调用，接收的参数格式是固定的,必须是一个数组，数组中每一项必须是一个对象
         // 对象中必须包含value属性
         queryDepartSearch(value, cb){
-            //console.log(value)
 
             // 没有输入框的值时候返回
             if(!value) {
@@ -115,14 +114,14 @@ export default {
             }).then(res => {
                 const {data} = res.data;
 
-                // 循环给每一项数据添加一个value属性
+                // 循环给每一项数据添加一个value属性,map写法
                 // const newData = data.map( v => {
                 //     v.value = v.name.replace("市", ""); // 城市名称
                 //     return v;
                 // } )
 
+                // forEach写法
                 const newData = [];
-
                 data.forEach(v => {
                     v.value = v.name.replace("市", "");
                     newData.push(v);
@@ -154,8 +153,9 @@ export default {
                 }
             }).then(res => {
                 const {data} = res.data;
-                const newData = [];
 
+                 // 循环给每一项数据添加一个value属性
+                const newData = [];
                 data.forEach(v => {
                     v.value = v.name.replace("市", "");
                     newData.push(v);
@@ -190,7 +190,6 @@ export default {
 
         // 触发和目标城市切换时触发
         handleReverse(){
-            
             const { departCity,  departCode,  destCity, destCode} = this.form;
 
             this.form.departCity = destCity;
