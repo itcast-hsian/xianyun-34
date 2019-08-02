@@ -59,7 +59,6 @@ export default {
         handleLoginSubmit(){
 
             this.$refs.form.validate( valid => {
-                console.log(valid)
 
                 if(valid){
                     
