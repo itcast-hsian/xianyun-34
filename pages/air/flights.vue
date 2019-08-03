@@ -16,9 +16,25 @@
                 <div>
                     <!-- flightsData.flights是后台返回的机票列表 -->
                     <FlightsItem 
-                    v-for="(item, index) in flightsData.flights"
+                    v-for="(item, index) in dataList"
                     :key="index"
                     :data="item"/>
+
+                    <!-- 分页 -->
+                    <!-- @size-change：修改条数时候触发
+                    @current-change：修改页数时候触发
+                    current-page：当前页面
+                    page-size：当前页面显示的条数
+                    total：总条数 -->
+                    <el-pagination
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="pageIndex"
+                    :page-sizes="[2, 4, 6, 8]"
+                    :page-size="pageSize"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="total">
+                    </el-pagination>
                 </div>
             </div>
 
@@ -41,6 +57,15 @@ export default {
             // 后台返回的大的数据列表
             flightsData: {},
 
+            // 保存当前显示的列表数据
+            dataList: [],
+
+            // 当前页数
+            pageIndex: 1,
+            // 显示的条数
+            pageSize: 2,
+            // 总条数
+            total: 0
         }
     },
 
@@ -49,8 +74,35 @@ export default {
         FlightsItem
     },
 
-    mounted(){
+    methods: {
+        // 修改分页条数时候触发
+        handleSizeChange(value){
+            // 修改分页条数
+            this.pageSize = value;
+            // 获取分页的数据
+            this.getDataList();
+        },
 
+        // 切换页数时候触发
+        handleCurrentChange(value){
+            // 修改页数
+            this.pageIndex = value;
+
+            // 获取分页的数据
+            this.getDataList();
+        },
+
+        // 获取分页的数据
+        getDataList(){
+             // 修改dataList的数据 //0 | 2 //2 | 4
+           this.dataList = this.flightsData.flights.slice( 
+               (this.pageIndex - 1) * this.pageSize,  
+               (this.pageIndex  - 1) * this.pageSize + this.pageSize 
+            );
+        }
+    },
+
+    mounted(){
         // console.log(this.$route.query)
 
         // 请求列表数据
@@ -59,7 +111,14 @@ export default {
             method: "GET",
             params: this.$route.query
         }).then(res => {
+            // 保存总的大数据
             this.flightsData = res.data;
+            
+            // 总条数
+            this.total = this.flightsData.flights.length;
+
+            // 切割出当前页面要显示的数据
+            this.dataList = this.flightsData.flights.slice( 0, 2 );
         });
     }
 }
