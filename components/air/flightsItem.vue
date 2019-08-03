@@ -1,6 +1,6 @@
 <template>
     <div class="flight-item">
-        <div>
+        <div @click="isShow = !isShow">
             <!-- 显示的机票信息 -->
             <el-row type="flex" align="middle" class="flight-info">
                 <el-col :span="6">
@@ -26,7 +26,8 @@
                 </el-col>
             </el-row>
         </div>
-        <div class="flight-recommend">
+
+        <div class="flight-recommend" v-if="isShow">
             <!-- 隐藏的座位信息列表 -->
             <el-row type="flex"  justify="space-between" align="middle">
                 <el-col :span="4">低价推荐</el-col>
@@ -62,8 +63,22 @@
 
 <script>
 export default {
+    data(){
+        return {
+            isShow: false
+        }
+    },
     // 声明组件可以接收哪些属性
-    props: ["data"],
+    // props: ["data"],
+
+    // props除了可以等于数组，还可以等于对象
+    // 好处就是可以知道该属性的类型，还有不传值时候还有默认值
+    props: {
+        data: {
+            type: Object, // 表示数据类型
+            default: {} // 如果调用组件时候不传该属性，会取这个默认值
+        }
+    },
 
     computed: {
         // 计算相隔时间
