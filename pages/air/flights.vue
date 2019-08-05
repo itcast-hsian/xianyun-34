@@ -5,7 +5,7 @@
             <!-- 顶部过滤列表 -->
             <div class="flights-content">
                 <!-- 过滤条件 -->
-                <FlightsFilters :data="flightsData"/>
+                <FlightsFilters :data="flightsData" @getDataList="getDataList"/>
                 
                 <!-- 航班头部布局 -->
                 <FlightsListHead/>
@@ -96,7 +96,16 @@ export default {
         },
 
         // 获取分页的数据
-        getDataList(){
+        getDataList(arr){
+
+            // 过滤组件调用时候返回的过滤后的数据
+            if(arr){
+                // 替换掉列表数据
+                 this.flightsData.flights = arr;
+
+                 this.total = arr.length;
+            }
+
              // 修改dataList的数据 //0 | 2 //2 | 4
            this.dataList = this.flightsData.flights.slice( 
                (this.pageIndex - 1) * this.pageSize,  
