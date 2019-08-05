@@ -88,11 +88,9 @@ export default {
 
         // watch是监听属性，可以监听实例下所有的属性变化 this.xxx
     watch: {
-
         // 监听路由信息的变化
         $route(){
             // console.log(this.$route)
-
             // 请求新的数据
             this.pageIndex = 1;
            this.getData();
