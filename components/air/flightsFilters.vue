@@ -92,17 +92,41 @@ export default {
 
     mounted(){
         // console.log(this.data,123)
+
+         // $refs, $router/$route, $on, $store, $axios, $emit
     },
 
     methods: {
         // 选择机场时候触发
         handleAirport(value){
-            console.log(value)
+            // 过滤条件保留符合条件的航班数据
+            const arr = this.data.flights.filter( v => {
+                return v.org_airport_name === value;
+            } )
+
+            // 把过滤后的数据传递给父组件
+            // 触发父组件传递的事件，修改dataList
+            this.$emit("getDataList", arr );
         },
 
         // 选择出发时间时候触发
         handleFlightTimes(value){
-            console.log(value)
+
+            // value = 6,12
+            const [from, to] = value.split(',');
+
+            // 过滤条件保留符合条件的航班数据
+            const arr = this.data.flights.filter( v => {
+                // 出发时间的小时
+                const start = v.dep_time.split(":")[0];
+
+                // 判断出发时间是否在选中的时间段内
+                return start >= from && start < to;
+            } )
+
+            // 把过滤后的数据传递给父组件
+            // 触发父组件传递的事件，修改dataList
+            this.$emit("getDataList", arr );
         },
 
          // 选择航空公司时候触发
@@ -116,13 +140,18 @@ export default {
             // 把过滤后的数据传递给父组件
             // 触发父组件传递的事件，修改dataList
             this.$emit("getDataList", arr );
-
-            // $refs, $router/$route, $on, $store, $axios, $emit
         },
 
          // 选择机型时候触发
         handleAirSize(value){
-           
+           // 过滤条件保留符合条件的航班数据
+            const arr = this.data.flights.filter( v => {
+                return v.plane_size === value;
+            } )
+
+            // 把过滤后的数据传递给父组件
+            // 触发父组件传递的事件，修改dataList
+            this.$emit("getDataList", arr );
         },
         
         // 撤销条件时候触发
