@@ -92,7 +92,7 @@ export default {
 
     mounted(){
         // console.log(this.data,123)
-
+        // this下的$属性
          // $refs, $router/$route, $on, $store, $axios, $emit
     },
 
