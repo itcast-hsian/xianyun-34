@@ -5,9 +5,7 @@
             <!-- 顶部过滤列表 -->
             <div class="flights-content">
                 <!-- 过滤条件 -->
-                <div>
-                    
-                </div>
+                <FlightsFilters :data="flightsData"/>
                 
                 <!-- 航班头部布局 -->
                 <FlightsListHead/>
@@ -50,12 +48,16 @@
 
 import FlightsListHead from "@/components/air/flightsListHead.vue"
 import FlightsItem from "@/components/air/flightsItem.vue"
+import FlightsFilters from "@/components/air/FlightsFilters.vue" 
 
 export default {
     data(){
         return {
             // 后台返回的大的数据列表
-            flightsData: {},
+            flightsData: {
+                info: {},
+                options: {}
+            },
 
             // 保存当前显示的列表数据
             dataList: [],
@@ -71,7 +73,8 @@ export default {
 
     components: {
         FlightsListHead,
-        FlightsItem
+        FlightsItem,
+        FlightsFilters
     },
 
     methods: {
