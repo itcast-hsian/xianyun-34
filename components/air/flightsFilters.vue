@@ -116,6 +116,8 @@ export default {
             // 把过滤后的数据传递给父组件
             // 触发父组件传递的事件，修改dataList
             this.$emit("getDataList", arr );
+
+            // $refs, $router/$route, $on, $store, $axios, $emit
         },
 
          // 选择机型时候触发
