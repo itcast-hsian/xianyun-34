@@ -86,6 +86,19 @@ export default {
         FlightsAside
     },
 
+        // watch是监听属性，可以监听实例下所有的属性变化 this.xxx
+    watch: {
+
+        // 监听路由信息的变化
+        $route(){
+            // console.log(this.$route)
+
+            // 请求新的数据
+            this.pageIndex = 1;
+           this.getData();
+        }
+    },
+
     methods: {
         // 修改分页条数时候触发
         handleSizeChange(value){
@@ -120,30 +133,34 @@ export default {
                (this.pageIndex - 1) * this.pageSize,  
                (this.pageIndex  - 1) * this.pageSize + this.pageSize 
             );
+        },
+
+        // 请求列表数据
+        getData(){
+            this.$axios({
+                url: "/airs",
+                method: "GET",
+                params: this.$route.query
+            }).then(res => {
+                // 保存总的大数据
+                this.flightsData = res.data;
+
+                // 缓存数据一旦赋值之后不能再被修改
+                this.cacheFlightsData = {...res.data};
+                
+                // 总条数
+                this.total = this.flightsData.flights.length;
+
+                // 切割出当前页面要显示的数据
+                this.dataList = this.flightsData.flights.slice( 0, 2 );
+            });
         }
     },
 
     mounted(){
         // console.log(this.$route.query)
-
-        // 请求列表数据
-        this.$axios({
-            url: "/airs",
-            method: "GET",
-            params: this.$route.query
-        }).then(res => {
-            // 保存总的大数据
-            this.flightsData = res.data;
-
-            // 缓存数据一旦赋值之后不能再被修改
-            this.cacheFlightsData = {...res.data};
-            
-            // 总条数
-            this.total = this.flightsData.flights.length;
-
-            // 切割出当前页面要显示的数据
-            this.dataList = this.flightsData.flights.slice( 0, 2 );
-        });
+         // 请求列表数据
+        this.getData();
     }
 }
 </script>
