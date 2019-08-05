@@ -230,6 +230,9 @@ export default {
                     // url的5个参数
                     query: this.form
             });
+
+            // 调用vuex的方法保存数据
+            this.$store.commit("air/setHistory", [this.form] )
         }
     },
     mounted() {
