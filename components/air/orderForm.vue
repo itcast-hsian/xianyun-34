@@ -45,8 +45,10 @@
         <div class="air-column">
             <h2>保险</h2>
             <div>
+                <!-- 保险的列表 -->
                 <div class="insurance-item" v-for="(item, index) in infoData.insurances" :key="index">
                     <el-checkbox 
+                    @change="handleChange(item)"
                     :label="`${ item.type }：￥${ item.price }/份×${ users.length }  最高赔付${ item.compensation }`" 
                     border>
                     </el-checkbox> 
@@ -59,11 +61,11 @@
             <div class="contact">
                 <el-form label-width="60px">
                     <el-form-item label="姓名">
-                        <el-input></el-input>
+                        <el-input v-model="contactName"></el-input>
                     </el-form-item>
 
                     <el-form-item label="手机">
-                        <el-input placeholder="请输入内容">
+                        <el-input placeholder="请输入内容" v-model="contactPhone">
                             <template slot="append">
                             <el-button @click="handleSendCaptcha">发送验证码</el-button>
                             </template>
@@ -71,7 +73,7 @@
                     </el-form-item>
 
                     <el-form-item label="验证码">
-                        <el-input></el-input>
+                        <el-input v-model="captcha"></el-input>
                     </el-form-item>
                 </el-form>   
                 <el-button type="warning" class="submit" @click="handleSubmit">提交订单</el-button>
@@ -131,6 +133,21 @@ export default {
         handleDeleteUser(index){
             this.users.splice( index,  1 );
         },
+
+        // 选中保险时候触发
+        handleChange(item){
+
+            // 判断数组中是否存在id，如果存在需要删除
+            const index = this.insurances.indexOf(item.id);
+
+            if(index > -1){
+                //删除
+                this.insurances.splice( index, 1 )
+            }else{
+                // 不存在再添加
+                this.insurances.push(item.id)
+            }
+        },
         
         // 发送手机验证码
         handleSendCaptcha(){
@@ -139,7 +156,17 @@ export default {
 
         // 提交订单
         handleSubmit(){
-            
+            // 需要提交给接口的数据
+            const data = {
+                users: this.users,
+                insurances: this.insurances,
+                contactName: this.contactName,
+                contactPhone: this.contactPhone,
+                captcha: this.captcha,
+                invoice: this.invoice,
+            }
+
+            console.log(data);
         }
     }
 }
