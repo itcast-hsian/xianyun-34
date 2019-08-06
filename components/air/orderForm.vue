@@ -1,12 +1,16 @@
 <template>
     <div class="main">
         <div class="air-column">
-            <h2>剩机人</h2>
+            <h2>乘机人</h2>
             <el-form class="member-info">
-                <div class="member-info-item" >
 
+                <!-- 循环渲染的乘机人 -->
+                <div class="member-info-item" v-for="(item, index) in users" :key="index">
                     <el-form-item label="乘机人类型">
-                        <el-input placeholder="姓名" class="input-with-select">
+                        <el-input 
+                        placeholder="姓名" 
+                        class="input-with-select" 
+                        v-model="item.username">
                             <el-select 
                             slot="prepend" 
                             value="1" 
@@ -18,7 +22,9 @@
 
                     <el-form-item label="证件类型">
                         <el-input 
-                        placeholder="证件号码"  class="input-with-select">
+                        placeholder="证件号码"  
+                        class="input-with-select"
+                        v-model="item.id" >
                             <el-select 
                             slot="prepend" 
                             value="1"           
@@ -76,10 +82,32 @@
 
 <script>
 export default {
+    // 表单的双向数据绑定
+    data(){
+        return {
+            users: [
+                {
+                    username: "",
+                    id: ""
+                }
+            ], // 用户列表，可以新增也可以删除的，保存用户的对象 username和id
+            insurances: [], // 保险的id
+            contactName: "", // 联系人
+            contactPhone: "", // 联系电话
+            captcha: "",
+
+            invoice: false,    // 发票
+        }
+    },
+
     methods: {
         // 添加乘机人
         handleAddUsers(){
-            
+            // 给users添加多一个对象
+            this.users.push({
+                username: "",
+                    id: ""
+            })
         },
         
         // 移除乘机人
