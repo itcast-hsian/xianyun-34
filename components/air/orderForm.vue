@@ -79,6 +79,9 @@
                 <el-button type="warning" class="submit" @click="handleSubmit">提交订单</el-button>
             </div>
         </div>
+
+        <!-- 调用allpice让总价开始计算 -->
+        <input type="hidden" :value="allPrice">
     </div>
 </template>
 
@@ -100,7 +103,32 @@ export default {
 
             invoice: false,    // 发票
 
-            infoData: {} // 机票信息
+            infoData: {  } // 机票信息
+        }
+    },
+
+    computed: {
+        // computed函数内部引用的实例的属性一旦发生变化
+        // 重复调用，返回新的值
+        allPrice(){
+           let price = 0;
+
+            // 接口还没返回，默认是0
+            if(!this.infoData.seat_infos){
+                return  0;
+            }
+           // 单价
+           price += this.infoData.seat_infos.org_settle_price;
+           // 燃油费
+           price += this.infoData.airport_tax_audlet;
+            //  保险
+           price += this.insurances.length * 30;
+            // 人数
+            price *= this.users.length;
+            // 把总价格返回给父组件
+            this.$emit("setAllPrice", price)
+
+            return price;
         }
     },
 
