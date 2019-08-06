@@ -116,6 +116,9 @@ export default {
         }).then(res => {
             // 获取机票信息
             this.infoData =  res.data;
+
+            // 把infodata传递给父组件
+            this.$emit("setInfoData", this.infoData);
         })
     },
 
