@@ -86,7 +86,10 @@ export default {
     props: {
         data: {
             type: Object,
-            default: {}
+            default: {
+                info: {},
+                options: {}
+            }
         }
     },
 
@@ -137,6 +140,9 @@ export default {
                 return v.airline_name === value;
             } )
 
+            // this.data.flights = arr;
+
+            // 子父传值
             // 把过滤后的数据传递给父组件
             // 触发父组件传递的事件，修改dataList
             this.$emit("getDataList", arr );

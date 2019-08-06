@@ -61,7 +61,7 @@ export default {
                 options: {}
             },
 
-            // 缓存的数据
+            // 缓存的数据 备份
             cacheFlightsData: {
                 info: {},
                 options: {}
@@ -117,7 +117,6 @@ export default {
 
         // 获取分页的数据
         getDataList(arr){
-
             // 过滤组件调用时候返回的过滤后的数据
             if(arr){
                 // 替换掉列表数据
