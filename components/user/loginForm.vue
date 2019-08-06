@@ -76,8 +76,10 @@ export default {
                         this.$store.commit("user/setUserInfo", res.data);
 
                         // 跳转到首页
-                        this.$router.push("/")
+                        // this.$router.push("/")
 
+                        // 返回上一页
+                        this.$router.back();
                     })
                 }
             } )
