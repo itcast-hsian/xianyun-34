@@ -151,7 +151,25 @@ export default {
         
         // 发送手机验证码
         handleSendCaptcha(){
-            
+             // 判断手机号码是否为空
+            if(!this.contactPhone){
+                this.$message.warning("手机号码不能为空");
+                return;
+            }
+
+            this.$axios({
+                url: "/captchas",
+                method: "POST",
+                data: {
+                    tel: this.contactPhone
+                }
+            }).then(res => {
+                const { code } = res.data;
+
+                this.$alert( `模拟手机验证码为：${code}`, "提示", {
+                    type: "warning"
+                } )
+            })
         },
 
         // 提交订单
@@ -164,9 +182,47 @@ export default {
                 contactPhone: this.contactPhone,
                 captcha: this.captcha,
                 invoice: this.invoice,
+                seat_xid:  this.$route.query.seat_xid,
+                air:  this.$route.query.id
             }
 
-            console.log(data);
+            // 判断表单是否通过
+            let valid = true;
+
+            // 判断乘机人
+            this.users.forEach(v => {
+                // 只要有一个属性不存在
+                if(!v.username || !v.id){
+                    // 不通过
+                    valid = false;
+                    this.$alert("乘机人信息不能为空", "提示", { type: "warning" })
+                }
+            })
+
+            // 如果不通过直接返回
+            if(!valid) {
+                return;
+            }
+
+            // 验证联系人信息
+            if(!this.contactName){
+                this.$alert("乘机人信息不能为空", "提示", { type: "warning" })
+                return;
+            }
+
+            // 提交订单
+            this.$axios({
+                url: "/airorders",
+                method: 'POST',
+                data,
+                // 头信息不是axios的，ajax也有
+                headers: {
+                    // JWT是后台的token的标准，前端只管传递一个Bearer
+                    Authorization: `Bearer ${ this.$store.state.user.userInfo.token }`
+                }
+            }).then(res => {
+                console.log(res);
+            })
         }
     }
 }
