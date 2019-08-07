@@ -70,6 +70,8 @@ export default {
         return {
             airport: "",        // 机场
             flightTimes: "",    // 出发时间
+
+
             company: "",        // 航空公司
             airSize: "",        // 机型大小
 
@@ -78,7 +80,15 @@ export default {
                 { label: "大", value: "L" },
                 { label: "中", value: "M"},
                 { label: "小", value: "S" },
-            ]
+            ],
+
+            // 保存过滤条件的对象
+            // value: 是条件的值
+            // key: 是后台返回的字段
+            filters: {
+                company: { value: "", key:"airline_name" },
+                airSize: { value: "", key:"plane_size" }
+            }
         }
     },
 
@@ -97,9 +107,35 @@ export default {
         // console.log(this.data,123)
         // this下的$属性
          // $refs, $router/$route, $on, $store, $axios, $emit
+
     },
 
     methods: {
+        // 负责过滤所有条件,给所有的过滤条件使用的
+        handleFilters(){
+            
+            // 循环遍历所有的条件，找出符合所有条件的数据
+            const newArr = this.data.flights.filter(item => {
+                let pass = true;
+
+                Object.keys(this.filters).forEach(v => {
+
+                    // 如果没有该条件，不用判断了
+                    if(! this.filters[v].value){
+                        return ;
+                    }
+                    //满足每个数据的值和过滤条件的值相等
+                    if(item[  this.filters[v].key  ] !== this.filters[v].value){
+                            pass = false;
+                     }
+                })
+
+                return pass;
+            })
+
+            this.$emit("getDataList", newArr );
+        },
+
         // 选择机场时候触发
         handleAirport(value){
             // 过滤条件保留符合条件的航班数据
@@ -136,28 +172,36 @@ export default {
         handleCompany(value){
 
             // 过滤条件保留符合条件的航班数据
-            const arr = this.data.flights.filter( v => {
-                return v.airline_name === value;
-            } )
+            // const arr = this.data.flights.filter( v => {
+            //     return v.airline_name === value;
+            // } )
 
             // this.data.flights = arr;
+
+            // 多选
+            this.filters.company.value = value;
+            this.handleFilters();
 
             // 子父传值
             // 把过滤后的数据传递给父组件
             // 触发父组件传递的事件，修改dataList
-            this.$emit("getDataList", arr );
+            //this.$emit("getDataList", arr );
         },
 
          // 选择机型时候触发
         handleAirSize(value){
            // 过滤条件保留符合条件的航班数据
-            const arr = this.data.flights.filter( v => {
-                return v.plane_size === value;
-            } )
+            // const arr = this.data.flights.filter( v => {
+            //     return v.plane_size === value;
+            // } )
+
+            // 多选
+            this.filters.airSize.value = value;
+            this.handleFilters();
 
             // 把过滤后的数据传递给父组件
             // 触发父组件传递的事件，修改dataList
-            this.$emit("getDataList", arr );
+            //his.$emit("getDataList", arr );
         },
         
         // 撤销条件时候触发
