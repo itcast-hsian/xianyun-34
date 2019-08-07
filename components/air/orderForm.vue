@@ -252,7 +252,22 @@ export default {
                     Authorization: `Bearer ${ this.$store.state.user.userInfo.token }`
                 }
             }).then(res => {
-                console.log(res);
+                // 订单提交成功，跳转到支付页
+
+                this.$message.success("订单提交成功，正在跳转");
+
+                // 为了体验好点，1秒再跳转
+                setTimeout(() => {
+                     const {id} = res.data.data;
+
+                    this.$router.push({
+                        path: "/air/pay",
+                        query: {
+                            id
+                        }
+                    })
+                }, 1000);
+               
             })
         }
     }
