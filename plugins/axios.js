@@ -14,7 +14,7 @@ export default (  {$axios, redirect }  ) => {
         //  没有权限 401 ||403的错误
        if(statusCode === 401 || statusCode === 403){
            // 跳转到登录页
-           redirect("/user/login");
+           //redirect("/user/login");
        }
 
         // 400 的错误处理

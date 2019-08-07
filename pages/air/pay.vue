@@ -28,14 +28,38 @@
 </template>
 
 <script>
-
 import QRCode from "qrcode";
 
 export default {
     data(){
         return {
             // 订单详情
-            infoData: {}
+            infoData: {},
+            timer: null
+        }
+    },
+
+    methods: {
+        // 查询付款状态，没3秒查询一次
+        // 返回promise
+        isPay(){
+            // 查询 
+            return this.$axios({
+                url: "/airorders/checkpay",
+                method: "POST",
+                data: {
+                    id: this.infoData.id,
+                    nonce_str:  this.infoData.price,
+                    out_trade_no: this.infoData.orderNo
+                },
+                headers: {
+                    // JWT是后台的token的标准，前端只管传递一个Bearer
+                    Authorization: `Bearer ${ this.$store.state.user.userInfo.token }`
+                }
+            }).then(res => {
+                // console.log(res.data)
+                return res.data;
+            })
         }
     },
     
@@ -43,21 +67,40 @@ export default {
         // 获取到id
         const {id} = this.$route.query;
 
-        // 获取订单详情
-        this.$axios({
-            url: "/airorders/" + id,
-            headers: {
-                // JWT是后台的token的标准，前端只管传递一个Bearer
-                Authorization: `Bearer ${ this.$store.state.user.userInfo.token }`
-            }
-        }).then(res => {
-            this.infoData = res.data;
+        setTimeout(() => {
 
-            // canvas的标签
-            const stage = document.querySelector("#qrcode-stage");
-            // 生成二维码
-            QRCode.toCanvas(stage, this.infoData.payInfo.code_url);
-        })
+            // 获取订单详情
+            this.$axios({
+                url: "/airorders/" + id,
+                headers: {
+                    // JWT是后台的token的标准，前端只管传递一个Bearer
+                    Authorization: `Bearer ${ this.$store.state.user.userInfo.token }`
+                }
+            }).then(res => {
+                this.infoData = res.data;
+
+                // canvas的标签
+                const stage = document.querySelector("#qrcode-stage");
+                // 生成二维码
+                QRCode.toCanvas(stage, this.infoData.payInfo.code_url);
+
+                // 查询付款的状态
+                this.timer = setInterval(() => {
+                    // 付款的状态
+                    this.isPay().then( value => {
+                        if(value.statusTxt === "支付完成"){
+                            clearInterval( this.timer );
+                            this.$message.success("支付成功，感谢100万的巨款")
+                        }
+                    } )
+                }, 3000);
+            })
+        }, 1)
+    },
+
+    // 组件销毁时候触发
+    destroyed(){
+        clearInterval( this.timer );
     }
 }
 </script>
