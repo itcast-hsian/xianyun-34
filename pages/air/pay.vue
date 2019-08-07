@@ -2,7 +2,7 @@
     <div class="container">
         <div class="main">
             <div class="pay-title">
-                支付总金额 <span class="pay-price">￥ 1000</span>
+                支付总金额 <span class="pay-price">￥ {{ infoData.price }}</span>
             </div>
             <div class="pay-main">
                 <h4>微信支付</h4>
@@ -11,8 +11,10 @@
                 align="middle"
                 class="pay-qrcode">
                     <div class="qrcode">
+
                         <!-- 二维码 -->
                         <canvas id="qrcode-stage"></canvas>
+
                         <p>请使用微信扫一扫</p>
                         <p>扫描二维码支付</p>
                     </div>
@@ -26,8 +28,37 @@
 </template>
 
 <script>
+
+import QRCode from "qrcode";
+
 export default {
+    data(){
+        return {
+            // 订单详情
+            infoData: {}
+        }
+    },
     
+    mounted(){
+        // 获取到id
+        const {id} = this.$route.query;
+
+        // 获取订单详情
+        this.$axios({
+            url: "/airorders/" + id,
+            headers: {
+                // JWT是后台的token的标准，前端只管传递一个Bearer
+                Authorization: `Bearer ${ this.$store.state.user.userInfo.token }`
+            }
+        }).then(res => {
+            this.infoData = res.data;
+
+            // canvas的标签
+            const stage = document.querySelector("#qrcode-stage");
+            // 生成二维码
+            QRCode.toCanvas(stage, this.infoData.payInfo.code_url);
+        })
+    }
 }
 </script>
 
